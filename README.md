@@ -7,7 +7,7 @@
 - 资源管理器右键菜单打包
 - 控制台激活工作台项目打包
 
-![feature operating](https://raw.githubusercontent.com/youngDun/vszip/master/ico.png)
+![feature operating](https://raw.githubusercontent.com/youngDun/vszip/master/using.gif)
 
 ## Release Notes
 针对zip的小工具
