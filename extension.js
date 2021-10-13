@@ -26,13 +26,13 @@ const activate = ctx => {
         if (checkWorkspace) {
           for (const folder of workspaceFolders) {
             if (folder.name === checkWorkspace) {
-              targetPath = folder.fsPath
+              targetPath = folder.uri.fsPath
               break
             }
           }
         }
       } else if (workspaceFolders && workspaceFolders.length) {
-        targetPath = workspaceFolders[0].fsPath
+        targetPath = workspaceFolders[0].uri.fsPath
       } else {
         vscode.window.showErrorMessage('没用发现可以压缩的目标')
         return
@@ -44,73 +44,74 @@ const activate = ctx => {
     const isDirectory = fs.statSync(targetPath).isDirectory()
 
     const name = await vscode.window.showInputBox({
-      value: '',
-      placeHolder: `请输入压缩包名称，不带后缀(默认：${pathParse.name}.zip)`
+      value: pathParse.name,
+      prompt: '请输入压缩包名称(默认自动添加后缀：.zip)'
     })
 
-    const currName = name || pathParse.name
-    const savePath = path.join(targetPath, `../${currName}.zip`)
-    let isExist = true
-    try {
-      fs.accessSync(savePath)
-    } catch (error) {
-      isExist = false
-    }
-
-    let isGenerate = true
-
-    if (isExist) {
-      const ask = await vscode.window.showWarningMessage('文件已存在', {
-        modal: true,
-        detail: '请选择操作'
-      }, '覆盖')
-      if (ask !== '覆盖') {
-        isGenerate = false
+    if (name) {
+      const savePath = path.join(targetPath, `../${name}.zip`)
+      let isExist = true
+      try {
+        fs.accessSync(savePath)
+      } catch (error) {
+        isExist = false
       }
-    }
 
-    if (isExist && isGenerate) {
-      fs.unlinkSync(savePath)
-    }
+      let isGenerate = true
 
-    if (isGenerate) {
-      const output = fs.createWriteStream(savePath)
-      // 压缩实例
-      const archive = archiver("zip", {
-        zlib: {
-          level: 9
-        }, // 压缩等级
-      })
-
-      output.on('close', async _ => {
-        vscode.window.showInformationMessage(`压缩完成，time ${Date.now() - start}ms，size ${archive.pointer()} total bytes`);
-        const platform = os.platform();
-        const command = (platform === 'win32' && 'explorer') ||
-          (platform === 'linux' && 'xdg-open') ||
-          (platform === 'darwin' && 'open'); // 是否支持打开
-        if (command) {
-          const ask = await vscode.window.showWarningMessage('是否打开所在目录？', {}, '确定', '取消')
-          if (ask === '确定') {
-            childProcess.execSync(`${command} "${path.join(targetPath, '../')}"`);
-          }
+      if (isExist) {
+        const ask = await vscode.window.showWarningMessage('文件已存在', {
+          modal: true,
+          detail: '请选择操作'
+        }, '覆盖')
+        if (ask !== '覆盖') {
+          isGenerate = false
         }
-      })
-
-      archive.on('error', err => {
-        vscode.window.showErrorMessage(JSON.stringify(err))
-      })
-
-      archive.pipe(output)
-
-      if (isDirectory) {
-        archive.directory(targetPath, false)
-      } else {
-        archive.file(targetPath, {
-          name: pathParse.base
-        })
       }
 
-      archive.finalize()
+      if (isExist && isGenerate) {
+        fs.unlinkSync(savePath)
+      }
+
+      if (isGenerate) {
+        const output = fs.createWriteStream(savePath)
+        // 压缩实例
+        const archive = archiver("zip", {
+          zlib: {
+            level: 9
+          }, // 压缩等级
+        })
+
+        output.on('close', async _ => {
+          vscode.window.showInformationMessage(`压缩完成，time ${Date.now() - start}ms，size ${archive.pointer()} total bytes`);
+          const platform = os.platform();
+          const command = (platform === 'win32' && 'explorer') ||
+            (platform === 'linux' && 'xdg-open') ||
+            (platform === 'darwin' && 'open'); // 是否支持打开
+          if (command) {
+            const ask = await vscode.window.showWarningMessage('是否打开所在目录？', {}, '确定', '取消')
+            if (ask === '确定') {
+              childProcess.execSync(`${command} "${path.join(targetPath, '../')}"`);
+            }
+          }
+        })
+
+        archive.on('error', err => {
+          vscode.window.showErrorMessage(JSON.stringify(err))
+        })
+
+        archive.pipe(output)
+
+        if (isDirectory) {
+          archive.directory(targetPath, false)
+        } else {
+          archive.file(targetPath, {
+            name: pathParse.base
+          })
+        }
+
+        archive.finalize()
+      }
     }
   });
 
