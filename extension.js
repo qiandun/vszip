@@ -77,6 +77,7 @@ const activate = ctx => {
         const output = fs.createWriteStream(savePath)
         // 压缩实例
         const archive = archiver("zip", {
+          forceLocalTime: true,
           zlib: {
             level: 9
           }, // 压缩等级
