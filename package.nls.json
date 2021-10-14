@@ -1,0 +1,13 @@
+{
+  "ext.command.compress": "Zip compress",
+  "ext.message.input_name": "Enter the name of package (default suffix:.zip)",
+  "ext.message.warn_more": "Too many files open. Select one to be compressed",
+  "ext.message.unknow": "Undiscovered resources",
+  "ext.message.exist": "Target already exists",
+  "ext.message.todo": "Please select",
+  "ext.message.replace": "Replace",
+  "ext.message.success": "Compress success",
+  "ext.message.confirm": "Yes",
+  "ext.message.cancel": "No",
+  "ext.message.open": "Do you want to open the directory?"
+}

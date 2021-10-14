@@ -1,9 +1,9 @@
 {
 	"name": "vszip",
 	"displayName": "vszip",
-	"description": "zip 工具箱",
+	"description": "zip toolkit",
 	"publisher": "shudun",
-	"version": "1.1.1",
+	"version": "1.2.0",
 	"engines": {
 		"vscode": "^1.10.0"
 	},
@@ -13,7 +13,7 @@
 	"activationEvents": [
 		"onCommand:vszip.compress"
 	],
-	"main": "./extension.js",
+	"main": "./dist/extension.js",
 	"icon": "ico.png",
 	"repository": {
 		"type": "git",
@@ -24,17 +24,18 @@
 		"visual studio code",
 		"zip"
 	],
-	"author": "shudun",
+	"author": "shudun <zhanqiandun@outlook.com>",
 	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/MrShudun/vszip/issues"
 	},
-	"homepage": "https://github.com/MrShudun/vszip#readme",
+	"homepage": "https://marketplace.visualstudio.com/items?itemName=shudun.vszip",
 	"contributes": {
 		"commands": [
 			{
 				"command": "vszip.compress",
-				"title": "zip压缩"
+				"category": "Zip",
+				"title": "%ext.command.compress%"
 			}
 		],
 		"menus": {
@@ -49,20 +50,31 @@
 	"scripts": {
 		"lint": "eslint .",
 		"pretest": "npm run lint",
-		"test": "node ./test/runTest.js"
+		"test": "node ./test/runTest.js",
+		"dev": "gulp dev",
+		"prebuild": "gulp",
+		"build": "vsce package"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.10.0",
+		"@babel/core": "^7.15.8",
+		"@babel/plugin-transform-runtime": "^7.15.8",
+		"@babel/preset-env": "^7.15.8",
 		"@types/glob": "^7.1.4",
 		"@types/mocha": "^9.0.0",
 		"@types/node": "14.x",
+		"@types/vscode": "^1.10.0",
+		"@vscode/test-electron": "^1.6.2",
 		"eslint": "^7.32.0",
 		"glob": "^7.1.7",
+		"gulp": "^4.0.2",
+		"gulp-babel": "^8.0.0",
+		"gulp-uglify": "^3.0.2",
 		"mocha": "^9.1.1",
 		"typescript": "^4.4.3",
-		"@vscode/test-electron": "^1.6.2"
+		"vsce": "^1.100.1"
 	},
 	"dependencies": {
+		"@babel/runtime": "^7.15.4",
 		"archiver": "^5.3.0"
 	}
 }

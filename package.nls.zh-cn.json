@@ -1,0 +1,13 @@
+{
+  "ext.command.compress": "Zip 压缩",
+  "ext.message.input_name": "请输入压缩包名称(默认自动添加后缀：.zip)",
+  "ext.message.warn_more": "当前存在多个目标，请选择需要压缩的资源",
+  "ext.message.unknow": "没用发现可以压缩的目标",
+  "ext.message.exist": "文件已存在",
+  "ext.message.todo": "请选择操作",
+  "ext.message.replace": "覆盖",
+  "ext.message.success": "压缩完成",
+  "ext.message.confirm": "确定",
+  "ext.message.cancel": "取消",
+  "ext.message.open": "是否打开所在目录？"
+}

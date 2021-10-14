@@ -1,17 +1,22 @@
 // vscode api
-const vscode = require('vscode');
+import vscode from 'vscode'
 // node
-const fs = require('fs')
-const os = require('os')
-const childProcess = require('child_process')
-const path = require('path')
-const archiver = require('archiver')
+import fs from 'fs'
+import os from 'os'
+import childProcess from 'child_process'
+import path from 'path'
+import archiver from 'archiver'
+
+import Lang from './util/language'
+import language from '../dist/util/language'
 
 /**
  * 拓展激活
  * @param {vscode.ExtensionContext} ctx
  */
 const activate = ctx => {
+  const localize = new Lang(ctx)
+
   const extension = vscode.commands.registerCommand('vszip.compress', async uri => {
     const start = Date.now()
     let targetPath = ''
@@ -21,7 +26,7 @@ const activate = ctx => {
       const workspaceFolders = vscode.workspace.workspaceFolders || []
       if (workspaceFolders && workspaceFolders.length > 1) {
         const checkWorkspace = await vscode.window.showQuickPick(workspaceFolders.map(v => v.name), {
-          title: '当前存在多个目标，请选择需要压缩的项目'
+          title: localize.t('ext.message.warn_more')
         })
         if (checkWorkspace) {
           for (const folder of workspaceFolders) {
@@ -34,7 +39,7 @@ const activate = ctx => {
       } else if (workspaceFolders && workspaceFolders.length) {
         targetPath = workspaceFolders[0].uri.fsPath
       } else {
-        vscode.window.showErrorMessage('没用发现可以压缩的目标')
+        vscode.window.showErrorMessage(localize.t('ext.message.unknow'))
         return
       }
     }
@@ -45,7 +50,7 @@ const activate = ctx => {
 
     const name = await vscode.window.showInputBox({
       value: pathParse.name,
-      prompt: '请输入压缩包名称(默认自动添加后缀：.zip)'
+      prompt: localize.t('ext.message.input_name')
     })
 
     if (name) {
@@ -60,11 +65,11 @@ const activate = ctx => {
       let isGenerate = true
 
       if (isExist) {
-        const ask = await vscode.window.showWarningMessage('文件已存在', {
+        const ask = await vscode.window.showWarningMessage(localize.t('ext.message.exist'), {
           modal: true,
-          detail: '请选择操作'
-        }, '覆盖')
-        if (ask !== '覆盖') {
+          detail: localize.t('ext.message.todo')
+        }, localize.t('ext.message.replace'))
+        if (ask !== localize.t('ext.message.replace')) {
           isGenerate = false
         }
       }
@@ -84,14 +89,14 @@ const activate = ctx => {
         })
 
         output.on('close', async _ => {
-          vscode.window.showInformationMessage(`压缩完成，time ${Date.now() - start}ms，size ${archive.pointer()} total bytes`);
+          vscode.window.showInformationMessage(`${localize.t('ext.message.success')}，time ${Date.now() - start}ms，size ${archive.pointer()} total bytes`);
           const platform = os.platform();
           const command = (platform === 'win32' && 'explorer') ||
             (platform === 'linux' && 'xdg-open') ||
             (platform === 'darwin' && 'open'); // 是否支持打开
           if (command) {
-            const ask = await vscode.window.showWarningMessage('是否打开所在目录？', {}, '确定', '取消')
-            if (ask === '确定') {
+            const ask = await vscode.window.showWarningMessage(localize.t('ext.message.open'), {}, localize.t('ext.message.confirm'), localize.t('ext.message.cancel'))
+            if (ask === localize.t('ext.message.confirm')) {
               childProcess.execSync(`${command} "${path.join(targetPath, '../')}"`);
             }
           }
