@@ -3,7 +3,7 @@
 	"displayName": "vszip",
 	"description": "zip 工具箱",
 	"publisher": "shudun",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"engines": {
 		"vscode": "^1.10.0"
 	},
@@ -17,7 +17,7 @@
 	"icon": "ico.png",
 	"repository": {
 		"type": "git",
-		"url": "git+ssh://git@github.com/youngDun/vszip.git"
+		"url": "git+ssh://git@github.com/MrShudun/vszip.git"
 	},
 	"keywords": [
 		"vs code",
@@ -27,9 +27,9 @@
 	"author": "shudun",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/youngDun/vszip/issues"
+		"url": "https://github.com/MrShudun/vszip/issues"
 	},
-	"homepage": "https://github.com/youngDun/vszip#readme",
+	"homepage": "https://github.com/MrShudun/vszip#readme",
 	"contributes": {
 		"commands": [
 			{
