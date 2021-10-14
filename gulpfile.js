@@ -40,7 +40,8 @@ const transfer = _ => {
 const build = _ => {
   return src(entry + FileName)
     .pipe(babel({
-      presets: ['@babel/env']
+      presets: ['@babel/env'],
+      plugins: ['@babel/transform-runtime']
     }))
     .pipe(uglify())
     .pipe(dest(Output))
