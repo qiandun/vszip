@@ -8,7 +8,6 @@ import path from 'path'
 import archiver from 'archiver'
 
 import Lang from './util/language'
-import language from '../dist/util/language'
 
 /**
  * 拓展激活
