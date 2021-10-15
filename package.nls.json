@@ -9,5 +9,6 @@
   "ext.message.success": "Compress success",
   "ext.message.confirm": "Yes",
   "ext.message.cancel": "No",
-  "ext.message.open": "Do you want to open the directory?"
+  "ext.message.open": "Do you want to open the directory?",
+  "ext.message.error": "Error of running, please contact us"
 }

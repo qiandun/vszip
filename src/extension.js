@@ -88,15 +88,24 @@ const activate = ctx => {
         })
 
         output.on('close', async _ => {
-          vscode.window.showInformationMessage(`${localize.t('ext.message.success')}，time ${Date.now() - start}ms，size ${archive.pointer()} total bytes`);
-          const platform = os.platform();
-          const command = (platform === 'win32' && 'explorer') ||
-            (platform === 'linux' && 'xdg-open') ||
-            (platform === 'darwin' && 'open'); // 是否支持打开
+          vscode.window.showInformationMessage(`${localize.t('ext.message.success')}，time ${Date.now() - start}ms，size ${archive.pointer()} total bytes`)
+          const platform = os.platform()
+          const command = (platform === 'win32' && 'explorer /select,') ||
+            (platform === 'linux' && 'nautilus -s ') ||
+            (platform === 'darwin' && 'open -R ') // 是否支持打开
           if (command) {
             const ask = await vscode.window.showWarningMessage(localize.t('ext.message.open'), {}, localize.t('ext.message.confirm'), localize.t('ext.message.cancel'))
             if (ask === localize.t('ext.message.confirm')) {
-              childProcess.execSync(`${command} "${path.join(targetPath, '../')}"`);
+              childProcess.exec(`${command}"${savePath}"`, err => {
+                // UNKNOWN: 打开成功了，但是还报错，应该超时了
+                // if (platform === 'linux') {
+                //   childProcess.exec(`xdg-open "${path.join(savePath, '../')}"`, _ => {
+                //     vscode.window.showErrorMessage(localize.t('ext.message.error'))
+                //   })
+                // } else {
+                //   vscode.window.showErrorMessage(localize.t('ext.message.error'))
+                // }
+              })
             }
           }
         })
@@ -118,9 +127,9 @@ const activate = ctx => {
         archive.finalize()
       }
     }
-  });
+  })
 
-  ctx.subscriptions.push(extension);
+  ctx.subscriptions.push(extension)
 }
 
 // 拓展卸载
